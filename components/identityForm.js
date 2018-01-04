@@ -12,6 +12,7 @@ import {
 } from "semantic-ui-react";
 import fetch from "isomorphic-unfetch";
 import Router from "next/router";
+import RegisterForm from "./registerForm";
 
 class IdentityForm extends Component {
   static defaultProps = {
@@ -47,7 +48,8 @@ class IdentityForm extends Component {
     }
   };
 
-  handleSubmit = () => {
+  handleSubmit = (event) => {
+    event.preventDefault();
     const { school, citizen } = this.state;
 
     if (!isNaN(citizen) && citizen.length === 13) {
@@ -56,38 +58,33 @@ class IdentityForm extends Component {
         submittedCitizen: citizen,
         loading: true
       });
-      console.log(this.state);
-      this.checkCitizen();
+      this.checkCitizen(citizen);
     } else {
       this.setState({ error: true });
     }
   };
 
-  checkCitizen = async variables => {
-    const res = await fetch("https://api.github.com/repos/zeit/next.js");
-    const json = await res.json().then(Router.push("/register"));
-    console.log(json);
+  checkCitizen = async citizen => {
+    const res = await fetch(
+      `https://rest.nextschool.io/v1/exam/registrant?school_id=159&citizen_id=${citizen}`
+    );
+    const json = await res.json().then(data => {
+      const queryParam = data.id ? `title=${data.title}&firstname=${
+        data.firstname
+      }&lastname=${data.lastname}&prev_edu_name=${
+        data.prev_edu_name
+      }&prev_edu_sub_district=${
+        data.prev_edu_sub_district
+      }&prev_edu_district=${data.prev_edu_district}&prev_edu_province=${
+        data.prev_edu_province
+      }` : `title=&firstname=&lastname=`;
+
+      Router.push(`/register?citizen=${citizen}&${queryParam}`, "/register", {
+        shallow: true
+      });
+    });
     this.setState({ loading: false });
   };
-
-  // handleChange = event => {
-  //   this.setState({ field: event.target.value })
-  // }
-
-  // handleSubmit = event => {
-  //   event.preventDefault()
-
-  //   // add it to state and clean current input value
-  //   this.setState(state => ({
-  //     field: '',
-  //   }))
-  // }
-  // {/*
-  //         <Form.Field name='school' value={school} onChange={this.handleChange} required>
-  //           <label>โรงเรียน</label>
-  //           <SelectSchool />
-  //         </Form.Field>
-  //       */}
 
   render() {
     const {

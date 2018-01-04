@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "next",
-    "build": "next build",
+    "build": "next build && next export",
     "start": "next start"
   },
   "keywords": [],
@@ -17,6 +17,11 @@
     "next": "^4.2.1",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
+    "react-select": "^1.1.0",
+    "react-select-fast-filter-options": "^0.2.3",
+    "react-virtualized-select": "^3.1.0",
+    "redux-form": "^7.2.0",
+    "reselect": "^3.0.1",
     "semantic-ui-react": "^0.77.1"
   }
 }

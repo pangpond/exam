@@ -11,7 +11,7 @@ import {
 
 import RegisterForm from "../components/registerForm";
 
-export default () => (
+export default ({ url: { query: { citizen, title, firstname, lastname, prev_edu_name, prev_edu_sub_district, prev_edu_district, prev_edu_province} } }) => (
   <div>
     <Head>
       <link
@@ -38,6 +38,9 @@ export default () => (
         }
       `}
     </style>
-    <RegisterForm />
+    <RegisterForm citizen={citizen} title={title} firstname={firstname} lastname={lastname} prev_edu_name={prev_edu_name} prev_edu_sub_district={prev_edu_sub_district} prev_edu_district={prev_edu_district} prev_edu_province={prev_edu_province} />
   </div>
 );
+
+
+
