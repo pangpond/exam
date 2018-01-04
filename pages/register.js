@@ -1,17 +1,22 @@
-import Head from "next/head";
-import {
-  Button,
-  Form,
-  Grid,
-  Header,
-  Image,
-  Message,
-  Segment
-} from "semantic-ui-react";
+import Head from 'next/head'
+import { Button, Form, Grid, Header, Image, Message, Segment } from 'semantic-ui-react'
 
-import RegisterForm from "../components/registerForm";
+import RegisterForm from '../components/registerForm'
 
-export default ({ url: { query: { citizen, title, firstname, lastname, prev_edu_name, prev_edu_sub_district, prev_edu_district, prev_edu_province} } }) => (
+export default ({
+  url: {
+    query: {
+      citizen,
+      title,
+      firstname,
+      lastname,
+      prev_edu_name,
+      prev_edu_sub_district,
+      prev_edu_district,
+      prev_edu_province,
+    },
+  },
+}) => (
   <div>
     <Head>
       <link
@@ -22,10 +27,7 @@ export default ({ url: { query: { citizen, title, firstname, lastname, prev_edu_
         rel="stylesheet"
         href="//fonts.googleapis.com/css?family=Roboto:400,100,300,500,700,900"
       />
-      <link
-        rel="stylesheet"
-        href="//fonts.googleapis.com/css?family=Montserrat:400,700"
-      />
+      <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Montserrat:400,700" />
       <link
         rel="stylesheet"
         href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"
@@ -38,9 +40,15 @@ export default ({ url: { query: { citizen, title, firstname, lastname, prev_edu_
         }
       `}
     </style>
-    <RegisterForm citizen={citizen} title={title} firstname={firstname} lastname={lastname} prev_edu_name={prev_edu_name} prev_edu_sub_district={prev_edu_sub_district} prev_edu_district={prev_edu_district} prev_edu_province={prev_edu_province} />
+    <RegisterForm
+      citizen={citizen}
+      title={title}
+      firstname={firstname}
+      lastname={lastname}
+      prev_edu_name={prev_edu_name}
+      prev_edu_sub_district={prev_edu_sub_district}
+      prev_edu_district={prev_edu_district}
+      prev_edu_province={prev_edu_province}
+    />
   </div>
-);
-
-
-
+)

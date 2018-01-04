@@ -1,5 +1,5 @@
-import { Component } from "react";
-import Link from "next/link";
+import { Component } from 'react'
+import Link from 'next/link'
 import {
   Container,
   Segment,
@@ -16,32 +16,34 @@ import {
   Divider,
   Grid,
   Message
-} from "semantic-ui-react";
-import Router from "next/router";
-import createFilterOptions from "react-select-fast-filter-options";
-import VirtualizedSelect from "react-virtualized-select";
-import { default as schoolJson } from "../static/school.json";
-import "react-virtualized/styles.css";
-import "react-virtualized-select/styles.css";
+} from 'semantic-ui-react'
+import Router from 'next/router'
+// import createFilterOptions from "react-select-fast-filter-options"
+// import VirtualizedSelect from "react-virtualized-select"
+// import { default as schoolJson } from "../static/school.json"
+// import "react-virtualized/styles.css"
+// import "react-virtualized-select/styles.css"
 
-const lookup = schoolJson["lookup"].split("|");
-const words = schoolJson["words"].split("|");
-const schools = [];
+import AddressFormTypeahead from 'react-thailand-address-typeahead'
 
-const t = text => {
-  if (typeof text === "number") {
-    text = lookup[text];
-  }
+// const lookup = schoolJson["lookup"].split("|");
+// const words = schoolJson["words"].split("|");
+// const schools = [];
 
-  return text.replace(/[A-Z]/gi, m => {
-    var ch = m.charCodeAt(0);
-    return words[ch < 97 ? ch - 65 : 26 + ch - 97];
-  });
-};
+// const t = text => {
+//   if (typeof text === "number") {
+//     text = lookup[text];
+//   }
+
+//   return text.replace(/[A-Z]/gi, m => {
+//     var ch = m.charCodeAt(0);
+//     return words[ch < 97 ? ch - 65 : 26 + ch - 97];
+//   });
+// };
 
 const steps = [
   {
-    key: "register",
+    key: 'register',
     active: true,
     title: "กรอกข้อมูล",
     description: "ชื่อ-สกุล, สถานศึกษา"
@@ -49,16 +51,16 @@ const steps = [
   {
     key: "finish",
     disabled: true,
-    title: "สำเร็จ"
+    title: "สำเร็จ",
   }
-];
+]
 
 const titles = [
   { key: "ด.ช.", text: "เด็กชาย", value: "ด.ช." },
   { key: "ด.ญ.", text: "เด็กหญิง", value: "ด.ญ." },
   { key: "นาย", text: "นาย", value: "นาย" },
   { key: "นางสาว", text: "นางสาว", value: "นางสาว" }
-];
+]
 
 const SchoolList = () => {
   // const schoolOptions = schools.filter(school => {
@@ -73,67 +75,80 @@ const SchoolList = () => {
       <option value="Chinese" />
       <option value="Dutch" />
     </datalist>
-  );
-};
+  )
+}
 
 class RegisterForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
       steps,
-      title: "",
-      firstname: "",
-      lastname: "",
-      prev_edu_name: "",
-      prev_edu_sub_district: "",
-      prev_edu_district: "",
-      prev_edu_province: "",
-      prev_edu_source: "",
+      title: '',
+      firstname: '',
+      lastname: '',
+      prev_edu_name: '',
+      prev_edu_sub_district: '',
+      prev_edu_district: '',
+      prev_edu_province: '',
+      prev_edu_source: '',
       loading: false,
       error: false,
-      errorMsg: "",
-      finish: false
-    };
+      errorMsg: '',
+      finish: false,
+    }
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.SchoolNameInput = this.SchoolNameInput.bind(this);
   }
 
-  SchoolNameInput = () => {
-    const options = schools.map((item, index) => ({
-      label: `${index}: ${item.text}`,
-      value: index
-    }));
+  componentWillMount() {
+    this.setState({
+      citizen: this.props.citizen,
+      title: this.props.title,
+      firstname: this.props.firstname,
+      lastname: this.props.lastname,
+      prev_edu_name: this.props.prev_edu_name,
+      prev_edu_sub_district: this.props.prev_edu_sub_district,
+      prev_edu_district: this.props.prev_edu_district,
+      prev_edu_province: this.props.prev_edu_province,
+      prev_edu_source: this.props.prev_edu_source
+    });
+  }
 
-    console.log(options);
-    const filterOptions = createFilterOptions({ options });
+  componentDidMount() {
+    if (
+      this.state.citizen === '' ||
+      typeof this.state.citizen === "undefined"
+    ) {
+      Router.push("/");
+    }
 
-    return (
-      <VirtualizedSelect
-        filterOptions={filterOptions}
-        options={options}
-        onChange={value1 => this.setState({ value1 })}
-        value={this.state.value1}
-      />
-    );
+    // let i = 1;
+    // schoolJson["data"].map(provinces => {
+    //   provinces[1].map(districts => {
+    //     districts[1].map(subDistricts => {
+    //       subDistricts[1].map(schoolName => {
+    //         schools.push({
+    //           id: i,
+    //           text:
+    //             "โรงเรียน" +
+    //             t(schoolName).trim() +
+    //             " >> " +
+    //             t(subDistricts[0]) +
+    //             " >> " +
+    //             t(districts[0]) +
+    //             " >> " +
+    //             t(provinces[0])
+    //         });
+    //         i++;
+    //       });
+    //     });
+    //   });
+    // });
+  }
 
-    return (
-      <Form.Group widths="equal">
-        <Form.Field
-          control={Input}
-          label="โรงเรียนที่กำลังศึกษา"
-          list="languages"
-          placeholder="โรงเรียนที่กำลังศึกษา"
-          value={prev_edu_name}
-          name="prev_edu_name"
-          onChange={this.handleChange}
-          required
-        />
-        <SchoolList />
-      </Form.Group>
-    );
-  };
+
 
   handleChangeLevel = (e, { value }) =>
     this.setState({ prev_edu_source: value });
@@ -158,14 +173,7 @@ class RegisterForm extends Component {
     } = this.state;
 
     if (
-      citizen !== "" &&
-      title !== "" &&
-      firstname !== "" &&
-      lastname !== "" &&
-      prev_edu_name !== "" &&
-      prev_edu_sub_district !== "" &&
-      prev_edu_district !== "" &&
-      prev_edu_province !== ""
+      citizen !== ''
     ) {
       const registrantInfo = {
         title,
@@ -240,50 +248,48 @@ class RegisterForm extends Component {
     this.setState({ loading: false });
   };
 
-  componentWillMount() {
-    this.setState({
-      citizen: this.props.citizen,
-      title: this.props.title,
-      firstname: this.props.firstname,
-      lastname: this.props.lastname,
-      prev_edu_name: this.props.prev_edu_name,
-      prev_edu_sub_district: this.props.prev_edu_sub_district,
-      prev_edu_district: this.props.prev_edu_district,
-      prev_edu_province: this.props.prev_edu_province,
-      prev_edu_source: this.props.prev_edu_source
-    });
-  }
 
-  componentDidMount() {
-    if (
-      this.state.citizen === "" ||
-      typeof this.state.citizen === "undefined"
-    ) {
-      Router.push("/");
-    }
 
-    let i = 1;
-    schoolJson["data"].map(provinces => {
-      provinces[1].map(districts => {
-        districts[1].map(subDistricts => {
-          subDistricts[1].map(schoolName => {
-            schools.push({
-              id: i,
-              text:
-                "โรงเรียน" +
-                t(schoolName).trim() +
-                " >> " +
-                t(subDistricts[0]) +
-                " >> " +
-                t(districts[0]) +
-                " >> " +
-                t(provinces[0])
-            });
-            i++;
-          });
-        });
-      });
-    });
+  SchoolNameInput = () => {
+
+    return (
+      <AddressForm
+         onAddressSelected={(addressObject) => console.log(addressObject)}
+        />
+    )
+
+    // const options = schools.map((item, index) => ({
+    //   label: `${index}: ${item.text}`,
+    //   value: index
+    // }));
+
+    // console.log(options);
+    // const filterOptions = createFilterOptions({ options });
+
+    // return (
+    //   <VirtualizedSelect
+    //     filterOptions={filterOptions}
+    //     options={options}
+    //     onChange={value1 => this.setState({ value1 })}
+    //     value={this.state.value1}
+    //   />
+    // );
+
+    // return (
+    //   <Form.Group widths="equal">
+    //     <Form.Field
+    //       control={Input}
+    //       label="โรงเรียนที่กำลังศึกษา"
+    //       list="languages"
+    //       placeholder="โรงเรียนที่กำลังศึกษา"
+    //       value={prev_edu_name}
+    //       name="prev_edu_name"
+    //       onChange={this.handleChange}
+    //       required
+    //     />
+    //     <SchoolList />
+    //   </Form.Group>
+    // );
   }
 
   render() {

@@ -68,28 +68,25 @@ class Identity extends Component {
 
     return (
       <div className="login-form">
-        <Grid
-          textAlign='center'
-          style={{ height: '100%' }}
-          verticalAlign='middle'
-        >
+        <Grid textAlign="center" style={{ height: '100%' }} verticalAlign="middle">
           <Grid.Column style={{ maxWidth: 450 }}>
-            <Header as='h2' color='teal' textAlign='center'>
-              <Image src='/logo.png' />
-              {' '}Log-in to your account
+            <Header as="h2" color="teal" textAlign="center">
+              <Image src="/logo.png" /> Log-in to your account
             </Header>
-            <Form size='large' onSubmit={this.handleSubmit} loading={false}>
+            <Form size="large" onSubmit={this.handleSubmit} loading={false}>
               <Segment stacked>
                 <Form.Input
                   fluid
                   placeholder="หมายเลขบัตรประชาชน 13 หลัก"
-                  icon='user'
-                  iconPosition='left'
+                  icon="user"
+                  iconPosition="left"
                   name="citizen"
                   value={citizen}
                   onChange={this.handleChange}
                 />
-                <Button color='teal' fluid size='large' type="submit">Submit</Button>
+                <Button color="teal" fluid size="large" type="submit">
+                  Submit
+                </Button>
               </Segment>
             </Form>
           </Grid.Column>
