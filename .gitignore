@@ -59,4 +59,4 @@ typings/
 
 #next.js
 .next
-
+out/
