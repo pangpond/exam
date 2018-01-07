@@ -1,7 +1,5 @@
 import Head from 'next/head'
-import { Button, Form, Grid, Header, Image, Message, Segment } from 'semantic-ui-react'
 
-import Identity from './identity'
 import IdentityForm from '../components/identityForm'
 
 export default () => (

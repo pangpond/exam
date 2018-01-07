@@ -1,4 +1,4 @@
-import { Component } from "react";
+import { Component } from 'react'
 import {
   Select,
   Button,
@@ -9,24 +9,23 @@ import {
   Message,
   Segment,
   Icon
-} from "semantic-ui-react";
-import fetch from "isomorphic-unfetch";
-import Router from "next/router";
-import RegisterForm from "./registerForm";
+} from 'semantic-ui-react'
+import fetch from 'isomorphic-unfetch'
+import Router from 'next/router'
 
 class IdentityForm extends Component {
   static defaultProps = {
-    messages: []
-  };
+    messages: [],
+  }
 
   state = {
-    school: "โรงเรียนกาญจนาภิเษกวิทยาลัย สุราษฎร์ธานี",
-    citizen: "",
-    submittedSchool: "โรงเรียนกาญจนาภิเษกวิทยาลัย สุราษฎร์ธานี",
-    submittedCitizen: "",
+    school: 'โรงเรียนกาญจนาภิเษกวิทยาลัย สุราษฎร์ธานี',
+    citizen: '',
+    submittedSchool: 'โรงเรียนกาญจนาภิเษกวิทยาลัย สุราษฎร์ธานี',
+    submittedCitizen: '',
     loading: false,
-    error: false
-  };
+    error: false,
+  }
 
   componentDidMount() {
     // this.socket = io()
@@ -40,35 +39,40 @@ class IdentityForm extends Component {
 
   handleChange = (e, { name, value }) => {
     if (!isNaN(value) && value.length <= 13) {
-      this.setState({ [name]: value });
+      this.setState({ [name]: value })
     }
 
-    if (name === "citizen" && value.length === 13) {
-      this.setState({ error: false });
+    if (name === 'citizen' && value.length === 13) {
+      this.setState({ error: false })
     }
   };
 
   handleSubmit = (event) => {
-    event.preventDefault();
-    const { school, citizen } = this.state;
+    event.preventDefault()
+    const { school, citizen } = this.state
 
     if (!isNaN(citizen) && citizen.length === 13) {
       this.setState({
         submittedSchool: school,
         submittedCitizen: citizen,
-        loading: true
-      });
-      this.checkCitizen(citizen);
+        loading: true,
+      })
+      this.checkCitizen(citizen)
     } else {
-      this.setState({ error: true });
+      this.setState({ error: true })
     }
   };
 
-  checkCitizen = async citizen => {
-    const res = await fetch(
-      `https://rest.nextschool.io/v1/exam/registrant?school_id=159&citizen_id=${citizen}`
-    );
-    const json = await res.json().then(data => {
+  checkCitizen = async (citizen) => {
+    const res = await fetch(`https://rest.nextschool.io/v1/exam/registrant?school_id=159&citizen_id=${citizen}`
+    )
+
+    const json = await res.json().then((data) => {
+      if (data.status === 'fail') {
+        this.setState({ error: true })
+        return
+      }
+
       const queryParam = data.id ? `title=${data.title}&firstname=${
         data.firstname
       }&lastname=${data.lastname}&prev_edu_name=${
@@ -77,13 +81,15 @@ class IdentityForm extends Component {
         data.prev_edu_sub_district
       }&prev_edu_district=${data.prev_edu_district}&prev_edu_province=${
         data.prev_edu_province
-      }` : `title=&firstname=&lastname=`;
+      }&prev_edu_source=${
+        JSON.parse(data.extra).prev_edu_level
+      }` : 'title=&firstname=&lastname='
 
-      Router.push(`/register?citizen=${citizen}&${queryParam}`, "/register", {
-        shallow: true
-      });
-    });
-    this.setState({ loading: false });
+      Router.push(`/register?citizen=${citizen}&${queryParam}`, '/register', {
+        shallow: true,
+      })
+    })
+    this.setState({ loading: false })
   };
 
   render() {
@@ -93,8 +99,8 @@ class IdentityForm extends Component {
       submittedSchool,
       submittedCitizen,
       loading,
-      error
-    } = this.state;
+      error,
+    } = this.state
 
     return (
       <div id="login-hidden">
@@ -279,7 +285,7 @@ class IdentityForm extends Component {
           </div>
           <div className="form">
             <div className="thumbnail">
-              <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/169963/hat.svg" />
+              <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/169963/hat.svg" alt="hat" />
             </div>
             <Form
               size="large"
@@ -310,22 +316,22 @@ class IdentityForm extends Component {
               </Button>
               <Message
                 error
-                content="กรุณากรอกหมายเลขบัตรประชาชนให้ครบ 13 หลัก"
+                content="กรุณากรอกหมายเลขบัตรประชาชนให้ถูกต้อง"
               />
             </Form>
           </div>
           <div className="container">
             <div className="info">
               <span>
-                Made with <Icon color="red" name="heart" /> by{" "}
+                Made with <Icon color="red" name="heart" /> by{' '}
                 <a href="http://www.nextschool.io"> NextSchool</a>
               </span>
             </div>
           </div>
         </div>
       </div>
-    );
+    )
   }
 }
 
-export default IdentityForm;
+export default IdentityForm

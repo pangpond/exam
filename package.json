@@ -16,20 +16,16 @@
   "license": "ISC",
   "dependencies": {
     "isomorphic-unfetch": "^2.0.0",
-    "jqljs": "git+https://github.com/zapkub/JQLjs.git",
+    "jqljs": "^0.3.2",
     "next": "^4.2.1",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
-    "react-select": "^1.1.0",
-    "react-select-fast-filter-options": "^0.2.3",
-    "react-thailand-address-typeahead": "^1.0.0-beta.8",
-    "react-virtualized-select": "^3.1.0",
-    "redux-form": "^7.2.0",
+    "recompose": "^0.26.0",
     "reselect": "^3.0.1",
-    "semantic-ui-react": "^0.77.1"
+    "semantic-ui-react": "^0.77.1",
+    "styled-components": "^2.4.0"
   },
   "devDependencies": {
-    "@kadira/storybook": "^2.21.0",
     "babel-eslint": "^8.1.2",
     "babel-jest": "^22.0.4",
     "babel-preset-react-native": "^4.0.0",

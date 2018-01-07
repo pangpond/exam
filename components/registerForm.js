@@ -1,5 +1,4 @@
 import { Component } from 'react'
-import Link from 'next/link'
 import {
   Container,
   Segment,
@@ -12,75 +11,65 @@ import {
   Input,
   Radio,
   Select,
-  TextArea,
   Divider,
   Grid,
-  Message
+  Message,
 } from 'semantic-ui-react'
 import Router from 'next/router'
-// import createFilterOptions from "react-select-fast-filter-options"
-// import VirtualizedSelect from "react-virtualized-select"
-// import { default as schoolJson } from "../static/school.json"
-// import "react-virtualized/styles.css"
-// import "react-virtualized-select/styles.css"
+import Typeahead from './typeahead/'
 
-import AddressFormTypeahead from 'react-thailand-address-typeahead'
-
-// const lookup = schoolJson["lookup"].split("|");
-// const words = schoolJson["words"].split("|");
-// const schools = [];
-
-// const t = text => {
-//   if (typeof text === "number") {
-//     text = lookup[text];
-//   }
-
-//   return text.replace(/[A-Z]/gi, m => {
-//     var ch = m.charCodeAt(0);
-//     return words[ch < 97 ? ch - 65 : 26 + ch - 97];
-//   });
-// };
-
-const steps = [
+let steps = [
   {
     key: 'register',
     active: true,
-    title: "กรอกข้อมูล",
-    description: "ชื่อ-สกุล, สถานศึกษา"
+    title: 'กรอกข้อมูล',
+    description: 'ชื่อ-สกุล, สถานศึกษา',
   },
   {
-    key: "finish",
+    key: 'finish',
     disabled: true,
-    title: "สำเร็จ",
-  }
+    title: 'สำเร็จ',
+  },
 ]
 
 const titles = [
-  { key: "ด.ช.", text: "เด็กชาย", value: "ด.ช." },
-  { key: "ด.ญ.", text: "เด็กหญิง", value: "ด.ญ." },
-  { key: "นาย", text: "นาย", value: "นาย" },
-  { key: "นางสาว", text: "นางสาว", value: "นางสาว" }
+  { key: 'ด.ช.', text: 'เด็กชาย', value: 'ด.ช.' },
+  { key: 'ด.ญ.', text: 'เด็กหญิง', value: 'ด.ญ.' },
+  { key: 'นาย', text: 'นาย', value: 'นาย' },
+  { key: 'นางสาว', text: 'นางสาว', value: 'นางสาว' },
 ]
 
-const SchoolList = () => {
-  // const schoolOptions = schools.filter(school => {
-  //   return school.text.toLowerCase().match("กาญ");
-  // });
+const SchoolNameInput = (defaultAddress) => {
+  const defaultAddressObject = {
+    s: defaultAddress.prev_edu_name,
+    a: defaultAddress.prev_edu_sub_district,
+    d: defaultAddress.prev_edu_district,
+    p: defaultAddress.prev_edu_province,
+  }
 
-  // console.log(schoolOptions);
+  console.log('defaultAddress')
+  console.log(defaultAddress)
 
   return (
-    <datalist id="languages">
-      <option value="English" />
-      <option value="Chinese" />
-      <option value="Dutch" />
-    </datalist>
+    <Typeahead
+      renderResult={data => (
+        <div>
+          โรงเรียน
+          <b>{data.s}</b> จังหวัด
+          <b>{data.p}</b> ตำบล
+          <b>{data.d}</b> อำเภอ
+          <b>{data.a}</b>
+        </div>
+      )}
+      onAddressSelected={addressObject => this.handleChangeAddress(addressObject)}
+      defaultAddress={defaultAddressObject}
+    />
   )
 }
 
 class RegisterForm extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       steps,
       title: '',
@@ -97,9 +86,8 @@ class RegisterForm extends Component {
       finish: false,
     }
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.SchoolNameInput = this.SchoolNameInput.bind(this);
+    this.handleChange = this.handleChange.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
   }
 
   componentWillMount() {
@@ -112,54 +100,46 @@ class RegisterForm extends Component {
       prev_edu_sub_district: this.props.prev_edu_sub_district,
       prev_edu_district: this.props.prev_edu_district,
       prev_edu_province: this.props.prev_edu_province,
-      prev_edu_source: this.props.prev_edu_source
-    });
+      prev_edu_source: this.props.prev_edu_source,
+    })
   }
 
   componentDidMount() {
     if (
       this.state.citizen === '' ||
-      typeof this.state.citizen === "undefined"
+      typeof this.state.citizen === 'undefined'
     ) {
-      Router.push("/");
+      Router.push('/')
     }
-
-    // let i = 1;
-    // schoolJson["data"].map(provinces => {
-    //   provinces[1].map(districts => {
-    //     districts[1].map(subDistricts => {
-    //       subDistricts[1].map(schoolName => {
-    //         schools.push({
-    //           id: i,
-    //           text:
-    //             "โรงเรียน" +
-    //             t(schoolName).trim() +
-    //             " >> " +
-    //             t(subDistricts[0]) +
-    //             " >> " +
-    //             t(districts[0]) +
-    //             " >> " +
-    //             t(provinces[0])
-    //         });
-    //         i++;
-    //       });
-    //     });
-    //   });
-    // });
   }
 
-
-
   handleChangeLevel = (e, { value }) =>
-    this.setState({ prev_edu_source: value });
-  handleChangeTitle = (e, { value }) => this.setState({ title: value });
+    this.setState({ prev_edu_source: value })
+
+  handleChangeTitle = (e, { value }) => this.setState({ title: value })
 
   handleChange = (e, { name, value }) => {
-    this.setState({ [name]: value });
-  };
+    this.setState({ [name]: value })
+  }
 
-  handleSubmit = event => {
-    event.preventDefault();
+  handleChangeAddress = (address) => {
+    const {
+      s: prev_edu_name,
+      a: prev_edu_sub_district,
+      d: prev_edu_district,
+      p: prev_edu_province
+    } = address
+
+    this.setState({
+      prev_edu_name,
+      prev_edu_sub_district,
+      prev_edu_district,
+      prev_edu_province,
+    })
+  }
+
+  handleSubmit = (event) => {
+    event.preventDefault()
     const {
       citizen,
       title,
@@ -170,7 +150,7 @@ class RegisterForm extends Component {
       prev_edu_district,
       prev_edu_province,
       prev_edu_source
-    } = this.state;
+    } = this.state
 
     if (
       citizen !== ''
@@ -180,121 +160,78 @@ class RegisterForm extends Component {
         firstname,
         lastname,
         citizen_id: citizen,
-        school_id: "159",
-        target_id: "7",
+        school_id: '159',
+        target_id: '7',
         prev_edu_name,
         prev_edu_sub_district,
         prev_edu_district,
-        prev_edu_province
-      };
+        prev_edu_province,
+        prev_edu_source,
+      }
 
-      this.register(registrantInfo);
+      // console.log(registrantInfo)
+      this.register(registrantInfo)
     } else {
-      this.setState({ error: true, errorMsg: "กรุณากรอกข้อมูลให้ครบถ้วน" });
+      this.setState({ error: true, errorMsg: 'กรุณากรอกข้อมูลให้ครบถ้วน' })
     }
   };
 
-  register = async bodyProperty => {
-    const res = await fetch(`https://rest.nextschool.io/v1/exam/registrant`, {
-      method: "POST",
+  register = async (bodyProperty) => {
+    const res = await fetch('https://rest.nextschool.io/v1/exam/registrant', {
+      method: 'POST',
       headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json"
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        ...bodyProperty
+        ...bodyProperty,
       }),
-      credentials: "same-origin"
+      credentials: 'same-origin'
     })
-      .then(response => {
+      .then((response) => {
         if (response.status >= 400) {
-          throw new Error("API Server Error");
+          throw new Error('API Server Error')
         }
         if (response.status === 204) {
           return {
-            status: "options"
-          };
+            status: 'options'
+          }
         }
-        return response.json();
+        return response.json()
       })
-      .then(data => {
-        if (data.status === "ok") {
-          const steps = [
+      .then((data) => {
+        if (data.status === 'ok') {
+          steps = [
             {
-              key: "register",
-              title: "กรอกข้อมูล",
+              key: 'register',
+              title: 'กรอกข้อมูล',
               completed: true,
-              description: "ชื่อ-สกุล, สถานศึกษา"
+              description: 'ชื่อ-สกุล, สถานศึกษา',
             },
             {
-              key: "finish",
+              key: 'finish',
               active: true,
               completed: true,
-              title: "สำเร็จ",
-              description: "ได้รับข้อมูลเรียบร้อยแล้ว"
-            }
-          ];
-          this.setState({ finish: true, steps });
-        } else if (data.status === "fail") {
+              title: 'สำเร็จ',
+              description: 'ได้รับข้อมูลเรียบร้อยแล้ว',
+            },
+          ]
+          this.setState({ finish: true, steps })
+        } else if (data.status === 'fail') {
           // console.log(bodyProperty)
           // console.log(data)
           this.setState({
             error: true,
-            errorMsg: "ผิดพลาด ไม่สามารถบันทึกข้อมูลสมัครได้"
-          });
+            errorMsg: 'ผิดพลาด ไม่สามารถบันทึกข้อมูลสมัครได้',
+          })
         }
-      });
+      })
 
-    this.setState({ loading: false });
-  };
-
-
-
-  SchoolNameInput = () => {
-
-    return (
-      <AddressForm
-         onAddressSelected={(addressObject) => console.log(addressObject)}
-        />
-    )
-
-    // const options = schools.map((item, index) => ({
-    //   label: `${index}: ${item.text}`,
-    //   value: index
-    // }));
-
-    // console.log(options);
-    // const filterOptions = createFilterOptions({ options });
-
-    // return (
-    //   <VirtualizedSelect
-    //     filterOptions={filterOptions}
-    //     options={options}
-    //     onChange={value1 => this.setState({ value1 })}
-    //     value={this.state.value1}
-    //   />
-    // );
-
-    // return (
-    //   <Form.Group widths="equal">
-    //     <Form.Field
-    //       control={Input}
-    //       label="โรงเรียนที่กำลังศึกษา"
-    //       list="languages"
-    //       placeholder="โรงเรียนที่กำลังศึกษา"
-    //       value={prev_edu_name}
-    //       name="prev_edu_name"
-    //       onChange={this.handleChange}
-    //       required
-    //     />
-    //     <SchoolList />
-    //   </Form.Group>
-    // );
+    this.setState({ loading: false })
   }
 
   render() {
     const {
-      steps,
       citizen,
       title,
       firstname,
@@ -308,11 +245,20 @@ class RegisterForm extends Component {
       error,
       errorMsg,
       finish
-    } = this.state;
+    } = this.state
+
+    const defaultAddress = {
+      s: this.props.prev_edu_name,
+      a: this.props.prev_edu_sub_district,
+      d: this.props.prev_edu_district,
+      p: this.props.prev_edu_province,
+    }
+
+    // const defaultAddress = {}
 
     return (
       <div
-        style={{ display: "flex", minHeight: "100vh", flexDirection: "column" }}
+        style={{ display: 'flex', minHeight: '100vh', flexDirection: 'column' }}
       >
         <div style={{ flex: 1 }}>
           <Segment>
@@ -328,7 +274,7 @@ class RegisterForm extends Component {
             </style>
 
             <Container text>
-              <Step.Group ordered items={steps} />
+              <Step.Group ordered items={this.state.steps} />
             </Container>
           </Segment>
           <Segment>
@@ -357,7 +303,12 @@ class RegisterForm extends Component {
                   <Header.Subheader>
                     ประกาศรายชื่อผู้มีสิทธิ์สอบ วันที่ 18 มกราคม 2561 <br />ที่บอร์ดประชาสัมพันธ์บริเวณมุขกลาง<br />
                     และทาง www.kjst.ac.th
+
                   </Header.Subheader>
+                  <Divider hidden />
+                  <Button onClick={() => Router.push('/')}>
+                    สมัครเพิ่ม
+                  </Button>
                 </Header>
               ) : (
                 <Form
@@ -392,64 +343,52 @@ class RegisterForm extends Component {
                       required
                     />
                   </Form.Group>
+                  <Typeahead
+                    renderResult={data => (
+                      <div>
+                        โรงเรียน
+                        <b>{data.s}</b> จังหวัด
+                        <b>{data.p}</b> ตำบล
+                        <b>{data.d}</b> อำเภอ
+                        <b>{data.a}</b>
+                      </div>
+                    )}
+                    onAddressSelected={addressObject => this.handleChangeAddress(addressObject)}
+                    defaultAddress={defaultAddress}
+                  />
 
-                  {this.SchoolNameInput()}
-
-                  <Form.Group widths="equal">
-                    <Form.Input
-                      label="ตำบล/แขวง"
-                      value={prev_edu_sub_district}
-                      name="prev_edu_sub_district"
-                      onChange={this.handleChange}
-                      required
-                    />
-                    <Form.Input
-                      label="อำเภอ/เขต"
-                      value={prev_edu_district}
-                      name="prev_edu_district"
-                      onChange={this.handleChange}
-                      required
-                    />
-                    <Form.Input
-                      label="จังหวัด"
-                      value={prev_edu_province}
-                      name="prev_edu_province"
-                      onChange={this.handleChange}
-                      required
-                    />
-                  </Form.Group>
                   <Form.Group inline>
-                    <label>กำลังศึกษาระดับชั้น</label>
+                    <label htmlFor="prev_edu_province">กำลังศึกษาระดับชั้น</label>
                     <Form.Field
                       control={Radio}
+                      id="prev_edu_source"
                       label="ป.4"
-                      value="1"
-                      checked={prev_edu_source === "1"}
+                      value="7"
+                      checked={prev_edu_source === '7'}
                       onChange={this.handleChangeLevel}
                     />
                     <Form.Field
                       control={Radio}
                       label="ป.5"
-                      value="2"
-                      checked={prev_edu_source === "2"}
+                      value="8"
+                      checked={prev_edu_source === '8'}
                       onChange={this.handleChangeLevel}
                     />
                     <Form.Field
                       control={Radio}
                       label="ป.6"
-                      value="3"
-                      checked={prev_edu_source === "3"}
+                      value="9"
+                      checked={prev_edu_source === '9'}
                       onChange={this.handleChangeLevel}
                     />
+
                   </Form.Group>
                   <Form.Field
                     control={Checkbox}
                     label="ข้าพเจ้ายอมรับว่าข้อมูลข้างต้นเป็นจริงทุกประการ"
                     required
                   />
-
                   <Message error content={errorMsg} />
-
                   <Button positive floated="right" size="big" type="submit">
                     สมัคร
                   </Button>
@@ -463,13 +402,13 @@ class RegisterForm extends Component {
         </div>
         <Container text textAlign="center">
           <span>
-            Made with <Icon color="red" name="heart" /> by{" "}
+            Made with <Icon color="red" name="heart" /> by{' '}
             <a href="http://www.nextschool.io"> NextSchool</a>
           </span>
         </Container>
       </div>
-    );
+    )
   }
 }
 
-export default RegisterForm;
+export default RegisterForm

@@ -14,6 +14,7 @@ export default ({
       prev_edu_sub_district,
       prev_edu_district,
       prev_edu_province,
+      prev_edu_source,
     },
   },
 }) => (
@@ -49,6 +50,7 @@ export default ({
       prev_edu_sub_district={prev_edu_sub_district}
       prev_edu_district={prev_edu_district}
       prev_edu_province={prev_edu_province}
+      prev_edu_source={prev_edu_source}
     />
   </div>
 )
