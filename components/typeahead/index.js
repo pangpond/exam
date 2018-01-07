@@ -1,8 +1,7 @@
 import React from 'react'
-import { Form, Input } from 'semantic-ui-react'
+import { Form } from 'semantic-ui-react'
 import { fieldsEnum } from './finder'
 import AddressTypeahead from './address'
-// import styles from './styles.css'
 
 type AddressFormInputPropType = {
   values: {

@@ -23,12 +23,13 @@
     "recompose": "^0.26.0",
     "reselect": "^3.0.1",
     "semantic-ui-react": "^0.77.1",
-    "styled-components": "^2.4.0"
+    "uglifyjs-webpack-plugin": "^1.1.6"
   },
   "devDependencies": {
     "babel-eslint": "^8.1.2",
     "babel-jest": "^22.0.4",
     "babel-preset-react-native": "^4.0.0",
+    "envify": "^4.1.0",
     "eslint": "^4.14.0",
     "eslint-config-airbnb": "^16.1.0",
     "eslint-config-airbnb-base": "^12.1.0",
@@ -40,6 +41,8 @@
     "jest": "^22.0.4",
     "react-devtools": "^3.0.0",
     "react-test-renderer": "^16.2.0",
-    "remote-redux-devtools": "^0.5.12"
+    "remote-redux-devtools": "^0.5.12",
+    "uglify-js": "^3.3.4",
+    "uglifyify": "^4.0.5"
   }
 }

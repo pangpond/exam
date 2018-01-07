@@ -1,6 +1,4 @@
 import Head from 'next/head'
-import { Button, Form, Grid, Header, Image, Message, Segment } from 'semantic-ui-react'
-
 import RegisterForm from '../components/registerForm'
 
 export default ({
