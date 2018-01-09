@@ -43,15 +43,20 @@ storiesOf('Typeahead', module).add('with label', () => (
       <Segment>
         <Form>
           <Typeahead
-            renderResult={data => (
-              <div>
-                โรงเรียน
-                <b>{data.s}</b> จังหวัด
-                <b>{data.p}</b> ตำบล
-                <b>{data.d}</b> อำเภอ
-                <b>{data.a}</b>
-              </div>
-            )}
+            renderResult={(data) => {
+              const provinceLabel = data.p === 'กรุงเทพมหานคร' ? '' : 'จังหวัด'
+              const districtLabel = data.p === 'กรุงเทพมหานคร' ? '' : 'อำเภอ'
+              const subDistrictLabel = data.p === 'กรุงเทพมหานคร' ? 'แขวง' : 'ตำบล'
+              return (
+                <div>
+                  โรงเรียน
+                  <b>{data.s}</b> {provinceLabel}
+                  <b>{data.p}</b> {subDistrictLabel}
+                  <b>{data.d}</b> {districtLabel}
+                  <b>{data.a}</b>
+                </div>
+              )
+            }}
             onAddressSelected={addressObject => console.log(addressObject)}
             defaultAddress={defaultAddress}
           />
