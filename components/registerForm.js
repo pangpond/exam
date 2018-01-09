@@ -47,9 +47,6 @@ const SchoolNameInput = (defaultAddress) => {
     p: defaultAddress.prev_edu_province,
   }
 
-  console.log('defaultAddress')
-  console.log(defaultAddress)
-
   return (
     <Typeahead
       renderResult={data => (
