@@ -69,6 +69,7 @@ class RegisterForm extends Component {
     super(props)
     this.state = {
       steps,
+      id: '',
       title: '',
       firstname: '',
       lastname: '',
@@ -91,6 +92,7 @@ class RegisterForm extends Component {
 
   componentWillMount() {
     this.setState({
+      id: this.props.id,
       citizen: this.props.citizen,
       title: this.props.title,
       firstname: this.props.firstname,
@@ -177,7 +179,9 @@ class RegisterForm extends Component {
   };
 
   handlePaperClick = () => {
-    const { citizen,
+    const {
+      id,
+      citizen,
       title,
       firstname,
       lastname,
@@ -187,16 +191,7 @@ class RegisterForm extends Component {
       prev_edu_province,
       prev_edu_source } = this.state
 
-    const queryParam = `title=${title}&firstname=${
-        firstname
-    }&lastname=${lastname}&prev_edu_name=${
-      prev_edu_name
-    }&prev_edu_sub_district=${
-      prev_edu_sub_district
-    }&prev_edu_district=${prev_edu_district}&prev_edu_province=${
-      prev_edu_province
-    }&prev_edu_source=${prev_edu_source
-    }`
+    const queryParam = `title=${title}&firstname=${firstname}&lastname=${lastname}&prev_edu_name=${prev_edu_name}&prev_edu_sub_district=${prev_edu_sub_district}&prev_edu_district=${prev_edu_district}&prev_edu_province=${prev_edu_province}&prev_edu_source=${prev_edu_source}&id=${id}`
 
     Router.push(`/print?citizen=${citizen}&${queryParam}`, '/print', {
       shallow: true,
@@ -258,6 +253,7 @@ class RegisterForm extends Component {
 
   render() {
     const {
+      id,
       citizen,
       title,
       firstname,
@@ -270,7 +266,7 @@ class RegisterForm extends Component {
       loading,
       error,
       errorMsg,
-      finish
+      finish,
     } = this.state
 
     const defaultAddress = {

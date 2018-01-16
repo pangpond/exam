@@ -4,6 +4,7 @@ import RegisterForm from '../components/registerForm'
 export default ({
   url: {
     query: {
+      id,
       citizen,
       title,
       firstname,
@@ -41,6 +42,7 @@ export default ({
       `}
     </style>
     <RegisterForm
+      id={id}
       citizen={citizen}
       title={title}
       firstname={firstname}

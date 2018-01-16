@@ -4,6 +4,7 @@ import { Checkbox } from 'semantic-ui-react'
 class Paper extends Component {
   render() {
     const {
+      id,
       citizen,
       title,
       firstname,
@@ -53,11 +54,11 @@ class Paper extends Component {
             <div className="" style={{ width: '80%', margin: '2% 0 0 10%' }}>
               <p className="firstMargin bold inline">
                 เลขประจำตัวผู้สมัคร &ensp;
-                <span className="letter-space">{citizen}</span>
+                <span className="letter-space">{id.padStart(5, '0')}</span>
               </p>
               <p className="inline bold">
                 ห้องสอบที่ &ensp;
-                <span className="letter-space">001</span>
+                <span className="letter-space">-</span>
                 <br />
               </p>
               <p className="firstMargin inline">

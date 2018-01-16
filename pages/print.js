@@ -4,6 +4,7 @@ import Paper from '../components/paper'
 export default ({
   url: {
     query: {
+      id,
       citizen,
       title,
       firstname,
@@ -43,6 +44,7 @@ export default ({
       `}
     </style>
     <Paper
+      id={id}
       citizen={citizen}
       title={title}
       firstname={firstname}

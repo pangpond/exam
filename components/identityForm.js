@@ -73,7 +73,7 @@ class IdentityForm extends Component {
         return
       }
 
-      const queryParam = data.id ? `title=${data.title}&firstname=${
+      const queryParam = data.id ? `id=${data.id}&title=${data.title}&firstname=${
         data.firstname
       }&lastname=${data.lastname}&prev_edu_name=${
         data.prev_edu_name
