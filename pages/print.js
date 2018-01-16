@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import RegisterForm from '../components/registerForm'
+import Paper from '../components/paper'
 
 export default ({
   url: {
@@ -32,6 +32,8 @@ export default ({
         href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"
       />
       <link rel="shortcut icon" type="image/x-icon" href="/static/favicon.ico" />
+      <link rel="stylesheet" href="/static/css/paperPage.css" />
+      <link rel="stylesheet" href="/static/css/paperIndex.css" />
     </Head>
     <style jsx global>
       {`
@@ -40,7 +42,7 @@ export default ({
         }
       `}
     </style>
-    <RegisterForm
+    <Paper
       citizen={citizen}
       title={title}
       firstname={firstname}

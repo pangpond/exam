@@ -77,6 +77,7 @@ class RegisterForm extends Component {
       prev_edu_district: '',
       prev_edu_province: '',
       prev_edu_source: '',
+      edit: false,
       loading: false,
       error: false,
       errorMsg: '',
@@ -85,6 +86,7 @@ class RegisterForm extends Component {
 
     this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
+    this.handlePaperClick = this.handlePaperClick.bind(this)
   }
 
   componentWillMount() {
@@ -98,6 +100,7 @@ class RegisterForm extends Component {
       prev_edu_district: this.props.prev_edu_district,
       prev_edu_province: this.props.prev_edu_province,
       prev_edu_source: this.props.prev_edu_source,
+      edit: this.props.citizen ? true : false,
     })
   }
 
@@ -173,6 +176,34 @@ class RegisterForm extends Component {
     }
   };
 
+  handlePaperClick = () => {
+    const { citizen,
+      title,
+      firstname,
+      lastname,
+      prev_edu_name,
+      prev_edu_sub_district,
+      prev_edu_district,
+      prev_edu_province,
+      prev_edu_source } = this.state
+
+    const queryParam = `title=${title}&firstname=${
+        firstname
+    }&lastname=${lastname}&prev_edu_name=${
+      prev_edu_name
+    }&prev_edu_sub_district=${
+      prev_edu_sub_district
+    }&prev_edu_district=${prev_edu_district}&prev_edu_province=${
+      prev_edu_province
+    }&prev_edu_source=${prev_edu_source
+    }`
+
+    Router.push(`/print?citizen=${citizen}&${queryParam}`, '/print', {
+      shallow: true,
+    })
+
+  }
+
   register = async (bodyProperty) => {
     const res = await fetch('https://rest.nextschool.io/v1/exam/registrant', {
       method: 'POST',
@@ -183,7 +214,7 @@ class RegisterForm extends Component {
       body: JSON.stringify({
         ...bodyProperty,
       }),
-      credentials: 'same-origin'
+      credentials: 'same-origin',
     })
       .then((response) => {
         if (response.status >= 400) {
@@ -191,7 +222,7 @@ class RegisterForm extends Component {
         }
         if (response.status === 204) {
           return {
-            status: 'options'
+            status: 'options',
           }
         }
         return response.json()
@@ -215,8 +246,6 @@ class RegisterForm extends Component {
           ]
           this.setState({ finish: true, steps })
         } else if (data.status === 'fail') {
-          // console.log(bodyProperty)
-          // console.log(data)
           this.setState({
             error: true,
             errorMsg: 'ผิดพลาด ไม่สามารถบันทึกข้อมูลสมัครได้',
@@ -250,8 +279,6 @@ class RegisterForm extends Component {
       d: this.props.prev_edu_district,
       p: this.props.prev_edu_province,
     }
-
-    // const defaultAddress = {}
 
     return (
       <div
@@ -293,7 +320,7 @@ class RegisterForm extends Component {
               </Grid>
               <Divider section />
               {finish ? (
-                <Header as="h2" icon textAlign="center">
+                <Header icon textAlign="center">
                   <Icon name="check" circular color="green" />
                   <Header as="h1">เรียบร้อย</Header>
                   <Header.Content color="grey">ขั้นตอนต่อไป</Header.Content>
@@ -392,8 +419,15 @@ class RegisterForm extends Component {
                   />
                   <Message error content={errorMsg} />
                   <Button positive floated="right" size="big" type="submit">
-                    สมัคร
+                    { this.state.edit ? 'แก้ใข' : 'สมัคร' }
                   </Button>
+                  {
+                    this.state.edit ? (
+                      <Button primary floated="right" size="big" type="button" onClick={this.handlePaperClick}>
+                        พิมพ์บัตรประจำตัวผู้สมัคร
+                      </Button>
+                    ) : null
+                  }
                   <Divider hidden />
                   <Divider hidden />
                   <Divider hidden />
