@@ -87,7 +87,7 @@ class Paper extends Component {
               </p>
               <p className="firstMargin inline">
                 รายงานตัวเข้าสอบ&emsp;วันที่&ensp;
-                <span>31 มีนาคม 2560 &ensp;</span>
+                <span>21 มกราคม 2560 &ensp;</span>
               </p>
               <p className="inline">
                 เวลา&ensp;
