@@ -15,9 +15,6 @@ class Paper extends Component {
       prev_edu_source,
     } = this.props
 
-    console.log(prev_edu_source)
-
-
     return (
       <div className="page" size="A5" style={{ width: '21cm', height: '14.8cm' }}>
         <style jsx global>
