@@ -20,7 +20,8 @@ class Paper extends Component {
       <div className="page" size="A5" style={{ width: '21cm', height: '14.8cm' }}>
         <style jsx global>
           {`
-            .ui.checkbox label, .ui.checkbox+label {
+            .ui.checkbox label,
+            .ui.checkbox + label {
               padding-left: 30px;
             }
           `}
@@ -43,8 +44,9 @@ class Paper extends Component {
             </div>
             <div style={{ width: '66%', height: '100%', float: 'left' }}>
               <p style={{ margin: '50px 0 0 40px', lineHeight: '140%' }}>
-                บัตรประจำตัวผู้สมัครสอบวัดความรู้ทางวิชาการ (KJST Pre-test 2018) <br />
-                โรงเรียนกาญจนาภิเษกวิทยาลัย สุราษฎร์ธานี<br />
+                บัตรประจำตัวผู้สมัครสอบวัดความรู้ทางวิชาการ (KJST Pre-test 2019) <br />
+                โรงเรียนกาญจนาภิเษกวิทยาลัย สุราษฎร์ธานี
+                <br />
                 ประจำปีการศึกษา 2561
               </p>
             </div>
@@ -54,13 +56,14 @@ class Paper extends Component {
             <div className="" style={{ width: '80%', margin: '2% 0 0 10%' }}>
               <p className="firstMargin bold inline">
                 เลขประจำตัวผู้สมัคร &ensp;
-                <span className="letter-space">{id.padStart(5, '0')}</span>
+                <span className="letter-space">{`${id}`.padStart(5, '0')}</span>
               </p>
-              <p className="inline bold">
+              {/* <p className="inline bold">
                 ห้องสอบที่ &ensp;
                 <span className="letter-space">-</span>
-                <br />
-              </p>
+
+              </p> */}
+              <br />
               <p className="firstMargin inline">
                 ชื่อ-สกุล&ensp;
                 <span className="">
@@ -69,10 +72,26 @@ class Paper extends Component {
               </p>
               <div className="inline">
                 กำลังศึกษาระดับชั้น &emsp;
-                <Checkbox style={{ fontSize: '24px', paddingLeft: '20px' }} label="ป.4" readOnly defaultChecked={prev_edu_source === '7'} />
-                <Checkbox style={{ fontSize: '24px', paddingLeft: '20px' }} label="ป.5" readOnly defaultChecked={prev_edu_source === '8'} />
-                <Checkbox style={{ fontSize: '24px', paddingLeft: '20px' }} label="ป.6" readOnly defaultChecked={prev_edu_source === '9'} />
-              </div><br />
+                <Checkbox
+                  style={{ fontSize: '24px', paddingLeft: '20px' }}
+                  label="ป.4"
+                  readOnly
+                  defaultChecked={prev_edu_source === '7'}
+                />
+                <Checkbox
+                  style={{ fontSize: '24px', paddingLeft: '20px' }}
+                  label="ป.5"
+                  readOnly
+                  defaultChecked={prev_edu_source === '8'}
+                />
+                <Checkbox
+                  style={{ fontSize: '24px', paddingLeft: '20px' }}
+                  label="ป.6"
+                  readOnly
+                  defaultChecked={prev_edu_source === '9'}
+                />
+              </div>
+              <br />
               <p className="firstMargin inline">
                 โรงเรียน&ensp;
                 <span>{prev_edu_name} &ensp;</span>
@@ -88,7 +107,7 @@ class Paper extends Component {
               </p>
               <p className="firstMargin inline">
                 รายงานตัวเข้าสอบ&emsp;วันที่&ensp;
-                <span>21 มกราคม 2560 &ensp;</span>
+                <span>20 มกราคม 2562 &ensp;</span>
               </p>
               <p className="inline">
                 เวลา&ensp;

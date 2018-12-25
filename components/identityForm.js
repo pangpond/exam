@@ -306,7 +306,7 @@ class IdentityForm extends Component {
         <div className="log-in-wrapper">
           <div className="container">
             <div className="info">
-              <h1>KJST Pre-test 2018</h1>
+              <h1>KJST Pre-test 2019</h1>
               <h2>โรงเรียนกาญจนาภิเษกวิทยาลัย สุราษฎร์ธานี</h2>
             </div>
           </div>

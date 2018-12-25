@@ -292,7 +292,7 @@ class RegisterForm extends Component {
                 </Grid.Column>
                 <Grid.Column textAlign="right" verticalAlign="middle">
                   <Header as="h2" icon>
-                    KJST Pre-test 2018
+                    KJST Pre-test 2019
                   </Header>
                 </Grid.Column>
               </Grid>
@@ -303,7 +303,7 @@ class RegisterForm extends Component {
                   <Header as="h1">เรียบร้อย</Header>
                   <Header.Content color="grey">ขั้นตอนต่อไป</Header.Content>
                   <Header.Subheader>
-                    ประกาศรายชื่อผู้มีสิทธิ์สอบ วันที่ 18 มกราคม 2561 <br />
+                    ประกาศรายชื่อผู้มีสิทธิ์สอบ วันที่ 17 มกราคม 2562 <br />
                     ที่บอร์ดประชาสัมพันธ์บริเวณมุขกลาง
                     <br />
                     และทาง www.kjst.ac.th
