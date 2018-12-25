@@ -16,6 +16,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.18.0",
+    "babel-plugin-inline-dotenv": "^1.2.0",
+    "dotenv": "^6.2.0",
+    "dotenv-webpack": "^1.5.7",
     "isomorphic-unfetch": "^2.0.0",
     "jqljs": "^0.3.2",
     "next": "^4.2.3",

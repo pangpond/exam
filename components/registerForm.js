@@ -15,6 +15,7 @@ import {
   Grid,
   Message,
 } from 'semantic-ui-react'
+import axios from 'axios'
 import Router from 'next/router'
 import Typeahead from './typeahead/'
 
@@ -83,6 +84,7 @@ class RegisterForm extends Component {
       error: false,
       errorMsg: '',
       finish: false,
+      accept: true,
     }
 
     this.handleChange = this.handleChange.bind(this)
@@ -102,26 +104,25 @@ class RegisterForm extends Component {
       prev_edu_district: this.props.prev_edu_district,
       prev_edu_province: this.props.prev_edu_province,
       prev_edu_source: this.props.prev_edu_source,
-      edit: this.props.citizen ? true : false,
+      edit: !!this.props.id,
     })
   }
 
   componentDidMount() {
-    if (
-      this.state.citizen === '' ||
-      typeof this.state.citizen === 'undefined'
-    ) {
+    if (this.state.citizen === '' || typeof this.state.citizen === 'undefined') {
       Router.push('/')
     }
   }
 
-  handleChangeLevel = (e, { value }) =>
-    this.setState({ prev_edu_source: value })
+  handleChangeLevel = (e, { value }) => this.setState({ prev_edu_source: value })
 
   handleChangeTitle = (e, { value }) => this.setState({ title: value })
 
   handleChange = (e, { name, value }) => {
     this.setState({ [name]: value })
+  }
+  handleChangeAccept = () => {
+    this.setState({ accept: false })
   }
 
   handleChangeAddress = (address) => {
@@ -129,7 +130,7 @@ class RegisterForm extends Component {
       s: prev_edu_name,
       a: prev_edu_sub_district,
       d: prev_edu_district,
-      p: prev_edu_province
+      p: prev_edu_province,
     } = address
 
     this.setState({
@@ -151,32 +152,29 @@ class RegisterForm extends Component {
       prev_edu_sub_district,
       prev_edu_district,
       prev_edu_province,
-      prev_edu_source
+      prev_edu_source,
+      accept,
     } = this.state
 
-    if (
-      citizen !== ''
-    ) {
+    if (citizen !== '' && accept === false) {
       const registrantInfo = {
         title,
         firstname,
         lastname,
         citizen_id: citizen,
-        school_id: '159',
-        target_id: '7',
+        school_id: process.env.SCHOOL_ID,
+        target_id: process.env.TARGET_ID,
         prev_edu_name,
         prev_edu_sub_district,
         prev_edu_district,
         prev_edu_province,
         prev_edu_source,
       }
-
-      // console.log(registrantInfo)
       this.register(registrantInfo)
     } else {
       this.setState({ error: true, errorMsg: 'กรุณากรอกข้อมูลให้ครบถ้วน' })
     }
-  };
+  }
 
   handlePaperClick = () => {
     const {
@@ -189,69 +187,57 @@ class RegisterForm extends Component {
       prev_edu_sub_district,
       prev_edu_district,
       prev_edu_province,
-      prev_edu_source } = this.state
+      prev_edu_source,
+    } = this.state
 
     const queryParam = `title=${title}&firstname=${firstname}&lastname=${lastname}&prev_edu_name=${prev_edu_name}&prev_edu_sub_district=${prev_edu_sub_district}&prev_edu_district=${prev_edu_district}&prev_edu_province=${prev_edu_province}&prev_edu_source=${prev_edu_source}&id=${id}`
 
     Router.push(`/print?citizen=${citizen}&${queryParam}`, '/print', {
       shallow: true,
     })
-
   }
 
   register = async (bodyProperty) => {
-    const res = await fetch('https://rest.nextschool.io/v1/exam/registrant', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
+    const {
+      data: { status },
+    } = await axios.post(
+      `${process.env.REST_URL}/exam/registrant`,
+      {
         ...bodyProperty,
-      }),
-      credentials: 'same-origin',
-    })
-      .then((response) => {
-        if (response.status >= 400) {
-          throw new Error('API Server Error')
-        }
-        if (response.status === 204) {
-          return {
-            status: 'options',
-          }
-        }
-        return response.json()
+      },
+      { headers: { Authorization: `bearer ${process.env.REST_TOKEN}` } },
+    )
+
+    if (status === 'ok') {
+      steps = [
+        {
+          key: 'register',
+          title: 'กรอกข้อมูล',
+          completed: true,
+          description: 'ชื่อ-สกุล, สถานศึกษา',
+        },
+        {
+          key: 'finish',
+          active: true,
+          completed: true,
+          title: 'สำเร็จ',
+          description: 'ได้รับข้อมูลเรียบร้อยแล้ว',
+        },
+      ]
+
+      this.setState({ finish: true, steps })
+    } else if (status === 'fail') {
+      this.setState({
+        error: true,
+        errorMsg: 'ผิดพลาด ไม่สามารถบันทึกข้อมูลสมัครได้',
       })
-      .then((data) => {
-        if (data.status === 'ok') {
-          steps = [
-            {
-              key: 'register',
-              title: 'กรอกข้อมูล',
-              completed: true,
-              description: 'ชื่อ-สกุล, สถานศึกษา',
-            },
-            {
-              key: 'finish',
-              active: true,
-              completed: true,
-              title: 'สำเร็จ',
-              description: 'ได้รับข้อมูลเรียบร้อยแล้ว',
-            },
-          ]
-          this.setState({ finish: true, steps })
-        } else if (data.status === 'fail') {
-          this.setState({
-            error: true,
-            errorMsg: 'ผิดพลาด ไม่สามารถบันทึกข้อมูลสมัครได้',
-          })
-        }
-      })
+    }
 
     this.setState({ loading: false })
   }
 
   render() {
+    console.log(this.state.accept)
     const {
       id,
       citizen,
@@ -277,9 +263,7 @@ class RegisterForm extends Component {
     }
 
     return (
-      <div
-        style={{ display: 'flex', minHeight: '100vh', flexDirection: 'column' }}
-      >
+      <div style={{ display: 'flex', minHeight: '100vh', flexDirection: 'column' }}>
         <div style={{ flex: 1 }}>
           <Segment>
             <style jsx global>
@@ -302,9 +286,7 @@ class RegisterForm extends Component {
               <Grid columns="equal">
                 <Grid.Column>
                   <Header as="h2">
-                    <Header.Subheader>
-                      หมายเลขบัตรประชาชนที่ใช้สมัคร
-                    </Header.Subheader>
+                    <Header.Subheader>หมายเลขบัตรประชาชนที่ใช้สมัคร</Header.Subheader>
                     {citizen}
                   </Header>
                 </Grid.Column>
@@ -321,21 +303,16 @@ class RegisterForm extends Component {
                   <Header as="h1">เรียบร้อย</Header>
                   <Header.Content color="grey">ขั้นตอนต่อไป</Header.Content>
                   <Header.Subheader>
-                    ประกาศรายชื่อผู้มีสิทธิ์สอบ วันที่ 18 มกราคม 2561 <br />ที่บอร์ดประชาสัมพันธ์บริเวณมุขกลาง<br />
+                    ประกาศรายชื่อผู้มีสิทธิ์สอบ วันที่ 18 มกราคม 2561 <br />
+                    ที่บอร์ดประชาสัมพันธ์บริเวณมุขกลาง
+                    <br />
                     และทาง www.kjst.ac.th
-
                   </Header.Subheader>
                   <Divider hidden />
-                  <Button onClick={() => Router.push('/')}>
-                    สมัครเพิ่ม
-                  </Button>
+                  <Button onClick={() => Router.push('/')}>สมัครเพิ่ม</Button>
                 </Header>
               ) : (
-                <Form
-                  onSubmit={this.handleSubmit}
-                  loading={loading}
-                  error={error}
-                >
+                <Form onSubmit={this.handleSubmit} loading={loading} error={error}>
                   <Form.Group widths="equal">
                     <Form.Field
                       control={Select}
@@ -406,24 +383,29 @@ class RegisterForm extends Component {
                       checked={prev_edu_source === '9'}
                       onChange={this.handleChangeLevel}
                     />
-
                   </Form.Group>
                   <Form.Field
                     control={Checkbox}
                     label="ข้าพเจ้ายอมรับว่าข้อมูลข้างต้นเป็นจริงทุกประการ"
+                    onChange={this.handleChangeAccept}
                     required
+                    error={this.state.accept}
                   />
                   <Message error content={errorMsg} />
                   <Button positive floated="right" size="big" type="submit">
-                    { this.state.edit ? 'แก้ใข' : 'สมัคร' }
+                    {this.state.edit ? 'แก้ไข' : 'สมัคร'}
                   </Button>
-                  {
-                    this.state.edit ? (
-                      <Button primary floated="right" size="big" type="button" onClick={this.handlePaperClick}>
-                        พิมพ์บัตรประจำตัวผู้สมัคร
-                      </Button>
-                    ) : null
-                  }
+                  {this.state.edit ? (
+                    <Button
+                      primary
+                      floated="right"
+                      size="big"
+                      type="button"
+                      onClick={this.handlePaperClick}
+                    >
+                      พิมพ์บัตรประจำตัวผู้สมัคร
+                    </Button>
+                  ) : null}
                   <Divider hidden />
                   <Divider hidden />
                   <Divider hidden />
