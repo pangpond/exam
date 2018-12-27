@@ -109,7 +109,6 @@ class IdentityForm extends Component {
     )
 
     if (errorCode === 0) {
-      console.log(data)
       const queryParam = data.basic.id
         ? `id=${data.basic.id}&title=${data.info.title}&firstname=${data.info.firstname}&lastname=${
           data.info.lastname
