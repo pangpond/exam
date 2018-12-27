@@ -8,10 +8,10 @@ import {
   Image,
   Message,
   Segment,
-  Icon
+  Icon,
 } from 'semantic-ui-react'
-import fetch from 'isomorphic-unfetch'
 import Router from 'next/router'
+import axios from 'axios'
 
 class IdentityForm extends Component {
   static defaultProps = {
@@ -45,7 +45,7 @@ class IdentityForm extends Component {
     if (name === 'citizen' && value.length === 13) {
       this.setState({ error: false })
     }
-  };
+  }
 
   handleSubmit = (event) => {
     event.preventDefault()
@@ -61,45 +61,76 @@ class IdentityForm extends Component {
     } else {
       this.setState({ error: true })
     }
-  };
+  }
 
   checkCitizen = async (citizen) => {
-    const res = await fetch(`https://rest.nextschool.io/v1/exam/registrant?school_id=159&citizen_id=${citizen}`
+    // const res = await fetch(`https://rest.nextschool.io/v1/exam/registrant?school_id=159&citizen_id=${citizen}`)
+
+    // const json = await res.json().then((data) => {
+    //   if (data.status === 'fail') {
+    //     this.setState({ error: true })
+    //     return
+    //   }
+
+    //   const queryParam = data.id
+    //     ? `id=${data.id}&title=${data.title}&firstname=${data.firstname}&lastname=${
+    //       data.lastname
+    //     }&prev_edu_name=${data.prev_edu_name}&prev_edu_sub_district=${
+    //       data.prev_edu_sub_district
+    //     }&prev_edu_district=${data.prev_edu_district}&prev_edu_province=${
+    //       data.prev_edu_province
+    //     }&prev_edu_source=${JSON.parse(data.extra).prev_edu_level}`
+    //     : 'title=&firstname=&lastname='
+
+    //   Router.push(`/register?citizen=${citizen}&${queryParam}`, '/register', {
+    //     shallow: true,
+    //   })
+    // })
+
+    const { data: existingData } = await axios.post(
+      `${process.env.REST_URL}/exam/existing-register`,
+      { citizen, school_id: process.env.SCHOOL_ID },
+      { headers: { Authorization: `bearer ${process.env.REST_TOKEN}` } },
     )
 
-    const json = await res.json().then((data) => {
-      if (data.status === 'fail') {
-        this.setState({ error: true })
-        return
-      }
-
-      const queryParam = data.id ? `id=${data.id}&title=${data.title}&firstname=${
-        data.firstname
-      }&lastname=${data.lastname}&prev_edu_name=${
-        data.prev_edu_name
-      }&prev_edu_sub_district=${
-        data.prev_edu_sub_district
-      }&prev_edu_district=${data.prev_edu_district}&prev_edu_province=${
-        data.prev_edu_province
-      }&prev_edu_source=${
-        JSON.parse(data.extra).prev_edu_level
-      }` : 'title=&firstname=&lastname='
-
-      Router.push(`/register?citizen=${citizen}&${queryParam}`, '/register', {
+    if (!existingData.existing) {
+      return Router.push(`/register?citizen=${citizen}`, '/register', {
         shallow: true,
       })
-    })
+    }
+
+    const {
+      data: { errorCode, message, data },
+    } = await axios.get(
+      `${process.env.REST_URL}/exam/registrant?citizen_id=${citizen}&school_id=${
+        process.env.SCHOOL_ID
+      }`,
+      { headers: { Authorization: `bearer ${process.env.REST_TOKEN}` } },
+    )
+
+    if (errorCode === 0) {
+      console.log(data)
+      const queryParam = data.basic.id
+        ? `id=${data.basic.id}&title=${data.info.title}&firstname=${data.info.firstname}&lastname=${
+          data.info.lastname
+        }&prev_edu_name=${data.info.prev_edu_name}&prev_edu_sub_district=${
+          data.info.prev_edu_sub_district
+        }&prev_edu_district=${data.info.prev_edu_district}&prev_edu_province=${
+          data.info.prev_edu_province
+        }&prev_edu_source=${JSON.parse(data.info.extra).prev_edu_level}`
+        : 'title=&firstname=&lastname='
+
+      return Router.push(`/register?citizen=${citizen}&${queryParam}`, '/register', {
+        shallow: true,
+      })
+    }
+
     this.setState({ loading: false })
-  };
+  }
 
   render() {
     const {
-      school,
-      citizen,
-      submittedSchool,
-      submittedCitizen,
-      loading,
-      error,
+      school, citizen, submittedSchool, submittedCitizen, loading, error,
     } = this.state
 
     return (
@@ -117,7 +148,7 @@ class IdentityForm extends Component {
         <style jsx>
           {`
             body {
-              content: "";
+              content: '';
               position: fixed;
               top: 0;
               left: 0;
@@ -212,7 +243,7 @@ class IdentityForm extends Component {
             }
             .container:before,
             .container:after {
-              content: "";
+              content: '';
               display: block;
               clear: both;
             }
@@ -240,12 +271,12 @@ class IdentityForm extends Component {
             }
             body {
               background: #ccc;
-              font-family: "Roboto", sans-serif;
+              font-family: 'Roboto', sans-serif;
               -webkit-font-smoothing: antialiased;
               -moz-osx-font-smoothing: grayscale;
             }
             body:before {
-              content: "";
+              content: '';
               position: fixed;
               top: 0;
               left: 0;
@@ -258,9 +289,7 @@ class IdentityForm extends Component {
               color: #737373;
               float: right;
             }
-            .select2-container--krajee
-              .select2-selection--single
-              .select2-selection__placeholder {
+            .select2-container--krajee .select2-selection--single .select2-selection__placeholder {
               font-size: 20px;
               float: left;
             }
@@ -269,9 +298,7 @@ class IdentityForm extends Component {
               height: 40px;
             }
 
-            .select2-container--krajee
-              .select2-selection--single
-              .select2-selection__arrow {
+            .select2-container--krajee .select2-selection--single .select2-selection__arrow {
               height: 38px;
             }
           `}
@@ -279,7 +306,7 @@ class IdentityForm extends Component {
         <div className="log-in-wrapper">
           <div className="container">
             <div className="info">
-              <h1>KJST Pre-test 2018</h1>
+              <h1>KJST Pre-test 2019</h1>
               <h2>โรงเรียนกาญจนาภิเษกวิทยาลัย สุราษฎร์ธานี</h2>
             </div>
           </div>
@@ -287,12 +314,7 @@ class IdentityForm extends Component {
             <div className="thumbnail">
               <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/169963/hat.svg" alt="hat" />
             </div>
-            <Form
-              size="large"
-              onSubmit={this.handleSubmit}
-              loading={loading}
-              error={error}
-            >
+            <Form size="large" onSubmit={this.handleSubmit} loading={loading} error={error}>
               <Form.Input
                 fluid
                 placeholder="หมายเลขบัตรประชาชน 13 หลัก"
@@ -305,19 +327,10 @@ class IdentityForm extends Component {
                 required
               />
 
-              <Button
-                color="orange"
-                className="bgMain"
-                fluid
-                size="big"
-                type="submit"
-              >
+              <Button color="orange" className="bgMain" fluid size="big" type="submit">
                 เริ่มสมัคร
               </Button>
-              <Message
-                error
-                content="กรุณากรอกหมายเลขบัตรประชาชนให้ถูกต้อง"
-              />
+              <Message error content="กรุณากรอกหมายเลขบัตรประชาชนให้ถูกต้อง" />
             </Form>
           </div>
           <div className="container">

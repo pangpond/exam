@@ -1,15 +1,11 @@
-import Head from "next/head";
-import {
-  Button,
-  Form,
-  Grid,
-  Header,
-  Image,
-  Message,
-  Segment
-} from "semantic-ui-react";
+import Head from 'next/head'
+import { Button, Form, Grid, Header, Image, Message, Segment } from 'semantic-ui-react'
 
-export default ({ url: { query: { citizen, firstname, lastname } } }) => (
+export default ({
+  url: {
+    query: { citizen, firstname, lastname },
+  },
+}) => (
   <div>
     <Head>
       <link
@@ -20,10 +16,7 @@ export default ({ url: { query: { citizen, firstname, lastname } } }) => (
         rel="stylesheet"
         href="//fonts.googleapis.com/css?family=Roboto:400,100,300,500,700,900"
       />
-      <link
-        rel="stylesheet"
-        href="//fonts.googleapis.com/css?family=Montserrat:400,700"
-      />
+      <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Montserrat:400,700" />
       <link
         rel="stylesheet"
         href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"
@@ -38,4 +31,4 @@ export default ({ url: { query: { citizen, firstname, lastname } } }) => (
     </style>
     Finish
   </div>
-);
+)
