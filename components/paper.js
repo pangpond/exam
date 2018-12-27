@@ -58,11 +58,6 @@ class Paper extends Component {
                 เลขประจำตัวผู้สมัคร &ensp;
                 <span className="letter-space">{`${id}`.padStart(5, '0')}</span>
               </p>
-              {/* <p className="inline bold">
-                ห้องสอบที่ &ensp;
-                <span className="letter-space">-</span>
-
-              </p> */}
               <br />
               <p className="firstMargin inline">
                 ชื่อ-สกุล&ensp;

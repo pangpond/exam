@@ -155,8 +155,9 @@ class RegisterForm extends Component {
       prev_edu_source,
       accept,
     } = this.state
-
-    if (citizen !== '' && accept === false) {
+    if (accept === true) {
+      this.setState({ error: true, errorMsg: 'กรุณายืนยันว่าข้อมูลข้างต้นเป็นความจริง' })
+    } else if (citizen !== '') {
       const registrantInfo = {
         title,
         firstname,
@@ -237,7 +238,6 @@ class RegisterForm extends Component {
   }
 
   render() {
-    console.log(this.state.accept)
     const {
       id,
       citizen,
